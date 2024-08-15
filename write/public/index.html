@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write NFC Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
+        }
+        .error {
+            color: #e74c3c;
+        }
+        .success {
+            color: #2ecc71;
+        }
+    </style>
+    <script>
+        function writeData() {
+            var data = document.getElementById('data').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/write?data=' + encodeURIComponent(data), true);
+            xhr.onload = function() {
+                var resultElement = document.getElementById('result');
+                if (xhr.status === 200) {
+                    resultElement.innerText = xhr.responseText;
+                    resultElement.className = 'success';
+                } else {
+                    resultElement.innerText = 'Error: ' + xhr.statusText;
+                    resultElement.className = 'error';
+                }
+            };
+            xhr.onerror = function() {
+                document.getElementById('result').innerText = 'Request failed';
+                document.getElementById('result').className = 'error';
+            };
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Write NFC Data</h1>
+        <input type="text" id="data" placeholder="Enter data to write">
+        <button onclick="writeData()">Write</button>
+        <p id="result"></p>
+    </div>
+</body>
+</html>
+
