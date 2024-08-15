@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID Reader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #0056b3;
+        }
+        #rfid-output {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            font-size: 1.2em;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        #rfid-output.loading {
+            color: #aaa;
+        }
+        .refresh-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #0056b3;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .refresh-button:hover {
+            background-color: #003d80;
+        }
+    </style>
+</head>
+<body>
+    <h1>RFID Reader Output</h1>
+    <pre id="rfid-output" class="loading">Waiting for data...</pre>
+    <button class="refresh-button" onclick="fetchRFIDData()">Refresh Now</button>
+
+    <script>
+        async function fetchRFIDData() {
+            const outputElement = document.getElementById('rfid-output');
+            outputElement.classList.add('loading');
+            outputElement.textContent = 'Fetching data...';
+            try {
+                const response = await fetch('/rfid');
+                const data = await response.text();
+                outputElement.textContent = data.trim() || 'No data found.';
+            } catch (error) {
+                outputElement.textContent = 'Error fetching data';
+            } finally {
+                outputElement.classList.remove('loading');
+            }
+        }
+
+        // 自动刷新数据，每隔5秒
+        setInterval(fetchRFIDData, 5000);
+    </script>
+</body>
+</html>
+
